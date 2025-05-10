@@ -3,7 +3,7 @@ services:
     name: flow-savvy-freelancer-backend
     env: node
     buildCommand: npm install && npm run build
-    startCommand: node dist/server.js
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
