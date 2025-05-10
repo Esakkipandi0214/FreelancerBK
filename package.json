@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node ./dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "rm -rf dist && tsc && prisma generate",
-    "postinstall": "prisma generate && tsc",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc --project tsconfig.json && prisma generate",
+    "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push"
   },
@@ -16,7 +17,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "prisma": "^5.10.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "rimraf": "^5.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
