@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import invoiceRouter from './routes/invoices';
 import clientRouter from './routes/clients';
-
+import userRoutes from './routes/user';
 dotenv.config();
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 // Routes
 app.use('/api/invoices', invoiceRouter);
 app.use('/api/clients', clientRouter);
-
+app.use('/api/users', userRoutes);
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
