@@ -3,9 +3,11 @@ import prisma from '../lib/prisma';
 
 const router = Router();
 
+// GET all clients
 router.get('/', async (req, res) => {
   try {
     const clients = await prisma.client.findMany({
+      where:{ isActive: true},
       include: { invoices: true }
     });
     res.json(clients);
@@ -15,11 +17,99 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-  const { name, contact, email, phone } = req.body;
+// GET CLIENTS by userId
+router.get('/user/:userId', async (req, res) => {
+  const { userId } = req.params;
 
-  if (!name || !email) {
-    return res.status(400).json({ error: 'Name and email are required' });
+  try {
+    const clients = await prisma.client.findMany({
+      where: { userId , isActive: true},
+      include: { invoices: true }, // include related invoices
+    });
+
+    // Map and transform clients before sending response
+    const mappedClients = clients.map((client: any) => {
+        const projects = client.invoices.length;
+        const PayBill = client.invoices.reduce(
+          (acc: number, invoice: any) => acc + Number(invoice.amount || 0),
+          0
+        );
+        const totalBilled = client.invoices.reduce(
+          (acc: number, invoice: any) => acc + Number(invoice.paidAmount || 0),
+          0
+        );
+        return {
+          id: client.clientId,
+          name: client.name,
+          contact: client.contact || "N/A",
+          email: client.email,
+          phone: client.phone,
+          projects,
+          totalBilled: `$${totalBilled.toFixed(2)}`,
+          PayBill:`$${PayBill.toFixed(2)}`
+        };
+      });
+    res.json(mappedClients);
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    res.status(500).json({ error: 'Failed to fetch clients by userId' });
+  }
+});
+
+
+// GET CLIENTS by userId
+router.get('/user/:userId/ClientCatogories', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const clients = await prisma.client.findMany({
+      where: { userId , isActive: true},
+      include: { invoices: true }, // include related invoices
+    });
+
+    // Map and transform clients before sending response
+    const mappedClients = clients.map((client: any) => {
+        const projects = client.invoices.length;
+        const totalBilled = client.invoices.reduce(
+          (acc: number, invoice: any) => acc + Number(invoice.amount || 0),
+          0
+        );
+        return {
+          id: client.clientId,
+          name: client.name,
+        };
+      });
+    res.json(mappedClients);
+  } catch (error) {
+    console.error('Error fetching clients:', error);
+    res.status(500).json({ error: 'Failed to fetch clients by userId' });
+  }
+});
+
+
+
+// GET CLIEND BY ID
+router.get('/:clientId', async (req, res) => {
+  const { clientId } = req.params;
+  const { name, email, phone } = req.body;
+
+  try {
+    const client = await prisma.client.findUnique({
+      where: { clientId , isActive: true},
+    });
+    res.json(client);
+  } catch (error) {
+    console.error('Error updating client:', error);
+    res.status(400).json({ error: 'Failed to update client' });
+  }
+});
+
+// POST create new client
+router.post('/', async (req, res) => {
+  const { name, contact, email, phone, userId } = req.body;
+
+  if (!name || !email || !userId) {
+    return res.status(400).json({ error: 'Name, email, and userId are required' });
   }
 
   try {
@@ -28,13 +118,14 @@ router.post('/', async (req, res) => {
         name,
         email,
         phone,
+        userId, // ensure userId is passed and related
       },
       include: {
         invoices: true
       }
     });
 
-    // Format the response to match frontend expectations
+    // Optional: front-end formatting
     const formattedClient = {
       ...client,
       contact: contact || '',
@@ -52,14 +143,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Add update endpoint
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
+// PUT update client
+router.put('/:clientId', async (req, res) => {
+  const { clientId } = req.params;
   const { name, email, phone } = req.body;
 
   try {
     const client = await prisma.client.update({
-      where: { id },
+      where: { clientId , isActive: true},
       data: { name, email, phone },
       include: { invoices: true }
     });
@@ -70,15 +161,16 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Add delete endpoint
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
+// DELETE client
+router.delete('/:clientId', async (req, res) => {
+  const { clientId } = req.params;
 
   try {
-    await prisma.client.delete({
-      where: { id }
+     await prisma.client.update({
+      where: {clientId },
+      data: { isActive: false }, // 👈 just mark inactive
     });
-    res.status(204).send();
+    res.status(200).json({message:"Client Deleted Successfully"});
   } catch (error) {
     console.error('Error deleting client:', error);
     res.status(400).json({ error: 'Failed to delete client' });

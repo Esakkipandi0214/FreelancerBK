@@ -1,52 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model Client {
-  id        String    @id @default(cuid())
+  clientId  String    @id @default(cuid()) @map("id")
   name      String
   email     String    @unique
   phone     String?
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
   invoices  Invoice[]
+  isActive  Boolean   @default(true)
 
   @@map("clients")
 }
 
 model Invoice {
-  id        String   @id @default(cuid())
-  client    Client   @relation(fields: [clientId], references: [id])
-  clientId  String   @map("client_id")
-  amount    Decimal  @db.Decimal(10, 2)
-  status    String
-  dueDate   DateTime @map("due_date")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id         String   @id @default(cuid())
+  clientId   String   @map("client_id")
+  amount     Decimal  @db.Decimal(10, 2)
+  status     String
+  dueDate    DateTime @map("due_date")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  paidAmount Decimal  @db.Decimal(10, 2)
+  client     Client   @relation(fields: [clientId], references: [clientId])
 
   @@map("invoices")
 }
 
 model User {
-  id            String   @id @default(uuid())
-  name          String?
-  email         String   @unique
-  phone         String?
-  password      String
-  isVerified    Boolean  @default(false)
-  otp           String?  // optional field to store OTP
-  otpExpiresAt  DateTime? // optional field for OTP expiration
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String    @id @default(uuid())
+  name         String?
+  email        String    @unique
+  phone        String?
+  password     String
+  isVerified   Boolean   @default(false)
+  otp          String?
+  otpExpiresAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  clients      Client[]
+  isActive  Boolean   @default(true)
 }
-
-
-
 
 model Expense {
   id            String   @id @default(cuid())

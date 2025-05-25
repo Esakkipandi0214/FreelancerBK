@@ -1,0 +1,140 @@
+{
+  "info": {
+    "name": "Invoice Routes",
+    "_postman_id": "invoice-routes-collection-id",
+    "description": "Collection to test Invoice API routes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Invoices",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/invoices",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["invoices"]
+        }
+      }
+    },
+    {
+      "name": "Get Invoices by User ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/invoices/user/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["invoices", "user", "{{userId}}"]
+        }
+      },
+      "variable": [
+        {
+          "key": "userId",
+          "value": "replace_with_userId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Get Invoices by Client ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/invoices/client/{{clientId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["invoices", "client", "{{clientId}}"]
+        }
+      },
+      "variable": [
+        {
+          "key": "clientId",
+          "value": "replace_with_clientId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Create Invoice",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"clientId\": \"replace_with_clientId\",\n  \"amount\": 100.00,\n  \"paidAmount\": 50.00,\n  \"status\": \"pending\",\n  \"dueDate\": \"2025-06-30\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/invoices",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["invoices"]
+        }
+      }
+    },
+    {
+      "name": "Update Invoice",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 150.00,\n  \"paidAmount\": 150.00,\n  \"status\": \"paid\",\n  \"dueDate\": \"2025-07-15\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/invoices/{{invoiceId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["invoices", "{{invoiceId}}"]
+        }
+      },
+      "variable": [
+        {
+          "key": "invoiceId",
+          "value": "replace_with_invoiceId",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Delete Invoice",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/invoices/{{invoiceId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["invoices", "{{invoiceId}}"]
+        }
+      },
+      "variable": [
+        {
+          "key": "invoiceId",
+          "value": "replace_with_invoiceId",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}
