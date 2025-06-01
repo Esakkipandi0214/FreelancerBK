@@ -1,9 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import invoiceRouter from './routes/invoices';
-import clientRouter from './routes/clients';
 import userRoutes from './routes/user';
+import BudgetRoutes from './routes/BudgetPlanner';
+import IncomeRoutes from './routes/UserIncome';
+import ExpenseRoutes from './routes/UserExpense';
+import UserPaymentRoutes from './routes/UserPayments';
+
+
+
+
 dotenv.config();
 
 const app = express();
@@ -12,10 +18,14 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/invoices', invoiceRouter);
-app.use('/api/clients', clientRouter);
 app.use('/api/users', userRoutes);
+app.use('/api/v1/budget', BudgetRoutes);
+app.use('/api/v1/income', IncomeRoutes);
+app.use('/api/v1/expense', ExpenseRoutes);
+app.use('/api/v1/user-payment', UserPaymentRoutes);
+
+
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });

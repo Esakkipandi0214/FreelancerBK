@@ -7,59 +7,92 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Client {
-  clientId  String    @id @default(cuid()) @map("id")
-  name      String
-  email     String    @unique
-  phone     String?
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  invoices  Invoice[]
-  isActive  Boolean   @default(true)
-
-  @@map("clients")
+enum PaymentType {
+  TO_PAY
+  TO_RECEIVE
 }
 
-model Invoice {
-  id         String   @id @default(cuid())
-  clientId   String   @map("client_id")
-  amount     Decimal  @db.Decimal(10, 2)
-  status     String
-  dueDate    DateTime @map("due_date")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  paidAmount Decimal  @db.Decimal(10, 2)
-  client     Client   @relation(fields: [clientId], references: [clientId])
-
-  @@map("invoices")
+enum PaymentStatus {
+  PENDING
+  PAID
+  RECEIVED
 }
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+  OTHER
+}
+
 
 model User {
-  id           String    @id @default(uuid())
+  id           String           @id @default(uuid())
   name         String?
-  email        String    @unique
+  email        String           @unique
   phone        String?
   password     String
-  isVerified   Boolean   @default(false)
+  isVerified   Boolean          @default(false)
   otp          String?
   otpExpiresAt DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  clients      Client[]
-  isActive  Boolean   @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  isActive     Boolean          @default(true)
+  budgets      Budget_Details[] @relation("UserBudgets")
+  payments     User_Payements[]
+  Incomes      User_Income[]
+  Expenses     User_Expense[]
 }
 
-model Expense {
-  id            String   @id @default(cuid())
-  description   String
-  category      String
-  amount        Decimal  @db.Decimal(10, 2)
-  date          DateTime
-  paymentMethod String   @map("payment_method")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+model Budget_Details {
+  budgetId        String         @id @default(uuid())
+  budgetName      String
+  userId          String
+  budgetStartDate DateTime
+  budgetEndDate   DateTime
+  createdTime     DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id], name: "UserBudgets")
+  incomes         User_Income[]
+  expenses        User_Expense[]
+}
 
-  @@map("expenses")
+model User_Income {
+  incomeId       String          @id @default(ulid())
+  incomeCategory String
+  incomeAmount   Float
+  paymentMethod   PaymentMethod  @default(OTHER)
+  createdTime    DateTime        @default(now())
+  budgetId       String?
+  Notes               String? @db.VarChar(255)
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  budget         Budget_Details? @relation(fields: [budgetId], references: [budgetId])
+}
+
+model User_Expense {
+  expenseId       String          @id @default(ulid())
+  expenseCategory String
+  expenseAmount   Float
+  Notes               String? @db.VarChar(255)
+  paymentMethod   PaymentMethod    @default(OTHER)
+  createdTime     DateTime        @default(now())
+  budgetId        String?
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  budget          Budget_Details? @relation(fields: [budgetId], references: [budgetId])
+}
+
+model User_Payements {
+  payementId          String   @id @default(ulid())
+  payementCategory    String
+  payementTotalAmount Float
+  payementPaidAmount  Float
+  paymentMethod   PaymentMethod    @default(OTHER)
+  Notes               String? @db.VarChar(255)  // limits to 255 characters
+  paymentType         PaymentType
+  paymentStatus       PaymentStatus @default(PENDING)
+  userId              String
+  createdTime         DateTime @default(now())
+  user                User     @relation(fields: [userId], references: [id])
 }
