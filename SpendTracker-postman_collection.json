@@ -1,0 +1,103 @@
+{
+  "info": {
+    "name": "Spend Tracker API",
+    "_postman_id": "spend-tracker-api-collection",
+    "description": "Postman collection for Budget_Planner_SpendTracker CRUD operations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Spend Entry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expense_Description\": \"Grocery shopping\",\n  \"expense_Category\": \"Food\",\n  \"budgetPlanId\": \"your-budgetPlanId\",\n  \"expense_amount\": 250.0,\n  \"pay_time\": \"2025-06-07T09:53:18.999053\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/create-spend",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "create-spend"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Spend Entries",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/get-spends/:budgetPlanId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "get-spends",
+            ":budgetPlanId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Spend Entry",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expense_Description\": \"Updated grocery\",\n  \"expense_Category\": \"Essentials\",\n  \"expense_amount\": 300.0,\n  \"pay_time\": \"2025-06-07T09:53:18.999151\",\n  \"isExpense_Paid\": true\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/update-spend/:spendTrackerId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "update-spend",
+            ":spendTrackerId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Delete Spend Entry",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/delete-spend/:spendTrackerId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "delete-spend",
+            ":spendTrackerId"
+          ]
+        }
+      }
+    }
+  ]
+}

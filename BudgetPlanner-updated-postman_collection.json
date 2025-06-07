@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "Budget Planner API",
+    "_postman_id": "budget-planner-api-id",
+    "description": "Postman collection for Budget_Planner endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Budget",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/create",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "create"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Budget_Name\": \"June Budget\",\n  \"Budget_Type\": \"Monthly\",\n  \"userId\": \"user-id-placeholder\",\n  \"Total_Budget\": 50000,\n  \"Plan_Status\": \"Active\",\n  \"budgetStartDate\": \"2025-06-07T09:09:26.282833\",\n  \"budgetEndDate\": \"2025-06-07T09:09:26.282844\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Budgets by User ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/api/get-budget/:userId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "get-budget",
+            ":userId"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Budget",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/update-budget/:budgetPlanId/:userId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "update-budget",
+            ":budgetPlanId",
+            ":userId"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"Budget_Name\": \"Updated Budget\",\n  \"Budget_Type\": \"Bi-Weekly\",\n  \"Total_Budget\": 40000,\n  \"Plan_Status\": \"Paused\",\n  \"budgetStartDate\": \"2025-06-07T09:09:26.282897\",\n  \"budgetEndDate\": \"2025-06-07T09:09:26.282900\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Delete Budget",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:3000/api/delete-budget/:budgetPlanId/:userId",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "delete-budget",
+            ":budgetPlanId",
+            ":userId"
+          ]
+        }
+      }
+    }
+  ]
+}

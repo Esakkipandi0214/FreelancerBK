@@ -6,6 +6,9 @@ import BudgetRoutes from './routes/BudgetPlanner';
 import IncomeRoutes from './routes/UserIncome';
 import ExpenseRoutes from './routes/UserExpense';
 import UserPaymentRoutes from './routes/UserPayments';
+import BudgetUpdatePlanner from './routes/BudgetUpdatePlanner';
+import BudgetTracker from './routes/BudgetTracker';
+
 
 
 
@@ -23,6 +26,10 @@ app.use('/api/v1/budget', BudgetRoutes);
 app.use('/api/v1/income', IncomeRoutes);
 app.use('/api/v1/expense', ExpenseRoutes);
 app.use('/api/v1/user-payment', UserPaymentRoutes);
+app.use('/api/v1/budget-planner', BudgetUpdatePlanner);
+app.use('/api/v1/budget-tracker', BudgetTracker);
+
+
 
 
 
@@ -30,10 +37,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-if (require.main === module) {
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
-}
+// if (require.main === module) {
+//   app.listen(port, () => {
+//     console.log(`Server is running on port ${port}`);
+//   });
+// }
 
 export default app;

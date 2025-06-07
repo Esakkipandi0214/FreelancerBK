@@ -18,6 +18,14 @@ enum PaymentStatus {
   RECEIVED
 }
 
+enum BudgetStatus {
+  Planning
+  InProgress
+  Completed
+  Cancelled
+}
+
+
 enum PaymentMethod {
   CASH
   UPI
@@ -95,4 +103,34 @@ model User_Payements {
   userId              String
   createdTime         DateTime @default(now())
   user                User     @relation(fields: [userId], references: [id])
+}
+
+model Budget_Planner {
+  budgetPlanId        String         @id @default(uuid())
+  Budget_Name      String
+  Budget_Type      String
+  userId          String
+  Total_Budget    Float
+  Spend_Budget    Float
+  Remainnig_Budget    Float
+  Plan_Status     BudgetStatus @default(Planning)
+  budgetStartDate DateTime
+  budgetEndDate   DateTime
+  createdTime     DateTime       @default(now())
+  // ✅ Relation to Spend Tracker
+  expenses            Budget_Planner_SpendTracker[] @relation("BudgetToExpenses")
+}
+
+model Budget_Planner_SpendTracker {
+  SpendTrackerId        String         @id @default(uuid())
+  expense_Description      String
+  expense_Category      String
+  budgetPlanId          String
+  expense_amount    Float
+  pay_time DateTime
+  createdTime     DateTime       @default(now())
+  isExpense_Paid Boolean @default(false)
+    // ✅ Relation back to Budget
+  budgetPlan          Budget_Planner @relation("BudgetToExpenses", fields: [budgetPlanId], references: [budgetPlanId])
+
 }
