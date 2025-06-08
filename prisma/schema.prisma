@@ -26,6 +26,11 @@ enum BudgetStatus {
 }
 
 
+enum PayType {
+  Income
+  Expense
+}
+
 enum PaymentMethod {
   CASH
   UPI
@@ -50,7 +55,6 @@ model User {
   budgets      Budget_Details[] @relation("UserBudgets")
   payments     User_Payements[]
   Incomes      User_Income[]
-  Expenses     User_Expense[]
 }
 
 model Budget_Details {
@@ -62,13 +66,13 @@ model Budget_Details {
   createdTime     DateTime       @default(now())
   user            User           @relation(fields: [userId], references: [id], name: "UserBudgets")
   incomes         User_Income[]
-  expenses        User_Expense[]
 }
 
 model User_Income {
   incomeId       String          @id @default(ulid())
   incomeCategory String
   incomeAmount   Float
+  PaymentType    PayType         
   paymentMethod   PaymentMethod  @default(OTHER)
   createdTime    DateTime        @default(now())
   budgetId       String?
@@ -78,18 +82,7 @@ model User_Income {
   budget         Budget_Details? @relation(fields: [budgetId], references: [budgetId])
 }
 
-model User_Expense {
-  expenseId       String          @id @default(ulid())
-  expenseCategory String
-  expenseAmount   Float
-  Notes               String? @db.VarChar(255)
-  paymentMethod   PaymentMethod    @default(OTHER)
-  createdTime     DateTime        @default(now())
-  budgetId        String?
-  userId          String
-  user            User            @relation(fields: [userId], references: [id])
-  budget          Budget_Details? @relation(fields: [budgetId], references: [budgetId])
-}
+
 
 model User_Payements {
   payementId          String   @id @default(ulid())

@@ -5,18 +5,32 @@ import prisma from '../lib/prisma';
 const router = Router();
 
 router.post('/create', async (req, res) => {
-  const { incomeCategory,userId, Notes,incomeAmount,paymentMethod, budgetId } = req.body;
+  const { incomeCategory,userId, Notes,incomeAmount,paymentMethod,paymentType, budgetId } = req.body;
 
   if (!incomeCategory || !incomeAmount  || !userId) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
   try {
+      const existing_user = await prisma.user.findUnique({ where: { id: userId } });
+      if(budgetId){
+         const budgets = await prisma.budget_Details.findUnique({where: { budgetId }});
+         if(!budgets){
+      res.status(404).json({message:"Budget not found"})
+    }
+      }
+     
+    if (!existing_user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    
+
     const User_Income = await prisma.user_Income.create({
       data: {
         incomeCategory ,
         incomeAmount,
         paymentMethod:paymentMethod??"OTHER",
+        PaymentType:paymentType,
         budgetId:budgetId || null,
         Notes:Notes ?? null,
         userId,

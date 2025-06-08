@@ -56,8 +56,7 @@ router.get('/get-budget/:userId', async (req, res) => {
     const budgets = await prisma.budget_Details.findMany({
       where: { userId:userId },
       include: {
-        incomes: true,
-        expenses: true,
+        incomes: true
       },
     });
 
