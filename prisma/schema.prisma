@@ -39,6 +39,11 @@ enum PaymentMethod {
   OTHER
 }
 
+enum Expense_Type {
+  WANT
+  NEED
+  SAVING
+}
 
 model User {
   id           String           @id @default(uuid())
@@ -70,7 +75,6 @@ model Budget_Details {
 
 model User_Income {
   incomeId       String          @id @default(ulid())
-  incomeCategory String
   incomeAmount   Float
   PaymentType    PayType         
   paymentMethod   PaymentMethod  @default(OTHER)
@@ -78,6 +82,8 @@ model User_Income {
   budgetId       String?
   Notes               String? @db.VarChar(255)
   userId         String
+  Expense_Type   Expense_Type?
+  Expense_Category String?
   user           User            @relation(fields: [userId], references: [id])
   budget         Budget_Details? @relation(fields: [budgetId], references: [budgetId])
 }
