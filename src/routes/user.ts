@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
     
     const userId = user?.id
 
-    console.log(`Generated OTP for ${email}: ${otp}`); 
+    // console.log(`Generated OTP for ${email}: ${otp}`); 
 
     await sendOtpEmail(email, otp);
   
@@ -169,7 +169,7 @@ router.post('/forgot-password', async (req, res) => {
 
     await sendOtpEmail(email, otp);
 
-    console.log(`Forgot Password OTP for ${email}: ${otp}`); // In production, send via email/SMS
+    // console.log(`Forgot Password OTP for ${email}: ${otp}`); // In production, send via email/SMS
     res.json({ message: 'OTP sent for password reset' });
   } catch (error) {
     console.error('Forgot password error:', error);
