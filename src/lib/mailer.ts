@@ -53,7 +53,7 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 export const sendOtpEmail = async (to: string, otp: string) => {
   try {
     const email = await resend.emails.send({
-      from: "onboarding@WiseWallet.dev", // sender email verified in Resend
+      from: `Resend <onboarding@resend.dev>`, // sender email verified in Resend
       to,
       subject: "Your OTP Code",
       html: `<p>Your OTP code is <b>${otp}</b>. It is valid for 10 minutes.</p>`,
